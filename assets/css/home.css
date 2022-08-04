@@ -1,0 +1,35 @@
+.page {
+    min-height: calc(100vh - 78px);
+    height: fit-content;
+}
+.banner_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 78px);
+}
+._svg {
+    height: 500px;
+}
+
+
+@media (max-width: 920px) {
+    ._flex_reverse {
+        flex-direction: column-reverse;
+    }
+    .banner_wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50vh;
+        text-align: center;
+    }
+    ._svg {
+        height: 40vh;
+    }
+    .banner_wrapper .buttons {
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+    }
+}

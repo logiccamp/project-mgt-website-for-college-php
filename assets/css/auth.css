@@ -1,0 +1,26 @@
+.auth .banner_wrapper {
+    min-height: calc(100vh - 80px);
+    height: fit-content;
+
+}
+.auth form {
+    /* width: 95%; */
+    /* max-width: 400px; */
+}
+.auth hr {
+    display: none;
+}
+
+@media (max-width: 920px) {
+    .auth .col-md-6:last-child .banner_wrapper{
+        display: none;
+    }
+    .auth hr {
+        display: block;
+    }
+    .auth .col-md-6:first-child .banner_wrapper{
+        height: calc(100vh - 80px);
+        justify-content: center;
+        text-align: center;
+    }
+}

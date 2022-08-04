@@ -1,0 +1,53 @@
+#chat3 .form-control {
+    border-color: transparent;
+}
+.msg_container_base {
+    margin-top: 10px;
+    /* padding: 20px; */
+    height: calc(100vh - 160px) !important;
+    margin-bottom: 0px;
+}
+.msg_container_base_ {
+    height: calc(100vh - 100px);
+}
+#chat3 .form-control:focus {
+    border-color: transparent;
+    box-shadow: inset 0px 0px 0px 1px transparent;
+}
+    
+.badge-dot {
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    margin-left: 2.9rem;
+    margin-top: -.75rem;
+}
+
+.msg_container_base_ li {
+    width: 90%;
+}
+
+.message {
+    height: 60px;
+    overflow-y: scroll;
+}
+#sendButton {
+    transition: 0.4s;
+}
+#sendButton:hover {
+    margin-top: 2px;
+}
+
+.loading_chat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.no_messages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
