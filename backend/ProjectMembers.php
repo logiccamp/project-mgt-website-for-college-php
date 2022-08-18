@@ -72,7 +72,6 @@ class ProjectMember
                 while ($row = mysqli_fetch_assoc($rs)) {
                     $projects[] = $row;
                 }
-
                 return $projects;
             } else {
                 return null;

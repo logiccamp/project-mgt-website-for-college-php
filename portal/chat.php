@@ -8,10 +8,10 @@ $matric_no = $_SESSION["user_id"];
 $activeUser = User\User::Where("matric_no", "=", $matric_no);
 $member = ProjectMember\ProjectMember::Where("user_id", "=", $activeUser['id']);
 
-if ($member == null) {
+if ($member == null && $activeUser["role_name"] == "student") {
     header("Location: /join");
 }
-if ($activeUser["profile_completed"] == false) {
+if ($activeUser["profile_completed"] == false && $activeUser["role_name"] == "student") {
     header("Location: /portal/profile");
 }
 $loadChatBot = true;
@@ -41,6 +41,8 @@ if ($chat["has_project"] == true) {
 } else {
     $allMembers = [];
 }
+$files = Chat\Chat::FilesWithLimit($chat["id"], 4);
+
 $avatar = "/assets/img/user_avatar_2.png";
 
 ?>
@@ -87,7 +89,9 @@ $avatar = "/assets/img/user_avatar_2.png";
                                     <img src="<?php echo if__else($member['profile_image'], '', $avatar, $thisImage); ?>" alt="<?php echo $member['full_name']; ?>" class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
                                     <div class="pt-1">
                                         <p class="fw-bold mb-0 <?php echo $modeTheme; ?>"><?php echo $member['full_name']; ?></p>
-                                        <p class="small text-muted">Last seen : <?php echo get_time_ago($member['last_login']); ?></p>
+                                        <p class="small p-0 text-muted d-flex">Last seen :
+                                            <span class="moment p-0 d-inline" data-date="<?php echo $member['last_login']; ?>"></span>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="pt-1">
@@ -100,63 +104,30 @@ $avatar = "/assets/img/user_avatar_2.png";
                     <?php } ?>
                     <hr>
                     <h5 class="font-weight-bold mt-4 mb-3 <?php echo $modeTheme; ?> text-center text-lg-start">Recent Files</h5>
-                    <li class="p-2 border-bottom ">
-                        <a href="#!" class="d-flex justify-content-between">
-                            <div class="d-flex flex-row">
-                                <div class="badge shadow-sm rounded-pill d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
-                                    <i class="fa fa-file-excel-o text-success" style="font-size: 20px;"></i>
+                    <?php
+
+                    foreach ($files as $file) { ?>
+                        <li class="p-2 border-bottom ">
+                            <a href="#!" class="d-flex justify-content-between">
+                                <div class="d-flex flex-row">
+                                    <div class="badge shadow-sm rounded-pill d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
+                                        <i class="fa <?php echo $file['file_icon'] . ' ' . $file['file_bg']; ?>" style=" font-size: 20px;"></i>
+                                    </div>
+                                    <div class="mx-2"></div>
+                                    <div class="pt-1">
+                                        <p class="fw-bold mb-0 <?php echo $modeTheme; ?>"><?php echo $file['file_name']; ?></p>
+                                        <p class="small text-muted moment" data-date="<?php echo $file['date_created']; ?>"></p>
+                                    </div>
                                 </div>
-                                <div class="mx-2"></div>
                                 <div class="pt-1">
-                                    <p class="fw-bold mb-0 <?php echo $modeTheme; ?>">Document Excel 2020</p>
-                                    <p class="small text-muted">Uploaded: 20days ago</p>
+                                    <span class="badge _secondary_bg float-end">
+                                        <span class="fa fa-eye"></span>
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="pt-1">
-                                <span class="badge _secondary_bg float-end">
-                                    <span class="fa fa-eye"></span>
-                                </span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="p-2 border-bottom ">
-                        <a href="#!" class="d-flex justify-content-between">
-                            <div class="d-flex flex-row">
-                                <div class="badge shadow-sm rounded-pill d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
-                                    <i class="fa fa-file-excel-o text-success" style="font-size: 20px;"></i>
-                                </div>
-                                <div class="mx-2"></div>
-                                <div class="pt-1">
-                                    <p class="fw-bold mb-0 <?php echo $modeTheme; ?>">Document Excel 2020</p>
-                                    <p class="small text-muted">Uploaded: 20days ago</p>
-                                </div>
-                            </div>
-                            <div class="pt-1">
-                                <span class="badge _secondary_bg float-end">
-                                    <span class="fa fa-eye"></span>
-                                </span>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="p-2 border-bottom ">
-                        <a href="#!" class="d-flex justify-content-between">
-                            <div class="d-flex flex-row">
-                                <div class="badge shadow-sm rounded-pill d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
-                                    <i class="fa fa-file-excel-o text-success" style="font-size: 20px;"></i>
-                                </div>
-                                <div class="mx-2"></div>
-                                <div class="pt-1">
-                                    <p class="fw-bold mb-0 <?php echo $modeTheme; ?>">Document Excel 2020</p>
-                                    <p class="small text-muted">Uploaded: 20days ago</p>
-                                </div>
-                            </div>
-                            <div class="pt-1">
-                                <span class="badge _secondary_bg float-end">
-                                    <span class="fa fa-eye"></span>
-                                </span>
-                            </div>
-                        </a>
-                    </li>
+                            </a>
+                        </li>
+                    <?php } ?>
+
 
                 </ul>
             </div>

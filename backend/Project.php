@@ -2,6 +2,7 @@
 
 namespace Project;
 
+use ChatMessage\ChatMessage;
 use ProjectMember\ProjectMember;
 use User\User;
 
@@ -103,8 +104,10 @@ class Project
                 case 'membersList':
                     $leaders = ProjectMember::Members($this_id);
                     $users = [];
-                    foreach ($leaders as $lead) {
-                        $users[] = User::Where("id", "=", $lead["user_id"]);
+                    if ($leaders != null) {
+                        foreach ($leaders as $lead) {
+                            $users[] = User::Where("id", "=", $lead["user_id"]);
+                        }
                     }
                     return $users;
                     break;
@@ -115,6 +118,14 @@ class Project
                         $users[] = User::Where("id", "=", $member["user_id"]);
                     }
                     return $users;
+                    break;
+                case 'Files':
+                    $messages = ChatMessage::Where("project_id", "=", $this_id);
+                    $files = [];
+                    foreach ($messages as $file) {
+                        if ($file["is_file"] == true) $files[] = $file;
+                    }
+                    return $files;
                     break;
 
                 default:

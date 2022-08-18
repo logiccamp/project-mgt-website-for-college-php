@@ -68,7 +68,8 @@ if (isset($_POST["login_btn"])) {
                     </form>
 
                     <div class="mt-5">
-                        <p>Developed by: ND 3 Computer Science (Group 8) 2021/2022</p>
+                        <p>Developed by: ND 3 Computer Science 2021/2022</p>
+
                     </div>
                 </div>
             </div>

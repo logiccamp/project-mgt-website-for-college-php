@@ -87,9 +87,9 @@ section {
 
 
 @media (max-width: 920px) {
-    .page_row {
+    /* .page_row {
         flex-direction: column-reverse;
-    }
+    } */
     .flex_rotate {
         flex-direction: column-reverse;
     }

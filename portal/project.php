@@ -8,10 +8,10 @@ $matric_no = $_SESSION["user_id"];
 $activeUser = User\User::Where("matric_no", "=", $matric_no);
 $member = ProjectMember\ProjectMember::Where("user_id", "=", $activeUser['id']);
 
-if ($member == null) {
+if ($member == null && $activeUser["role_name"] == "student") {
     header("Location: /join");
 }
-if ($activeUser["profile_completed"] == false) {
+if ($activeUser["profile_completed"] == false && $activeUser["role_name"] == "student") {
     header("Location: /portal/profile");
 }
 
@@ -34,11 +34,12 @@ if (count($project) == 0) {
 }
 $project = $project[0];
 $totalMembers = Project\Project::GetMultiple('membercount', $project["id"]);
+$avatar = "/assets/img/user_avatar_2.png";
 
 
 // chat
 $chat = Project\Project::Chat($project['id']);
-print_r($chat);
+
 if (!$chat) {
     $isCreated = Chat\Chat::Create([
         "has_project" => 1,
@@ -58,6 +59,9 @@ if (!$chat) {
     }
 }
 
+$recentMessages = Chat\Chat::MessagesWithLimit($chat["id"], $activeUser["id"], 5);
+$recentMedia = Chat\Chat::FilesWithLimit($chat['id'], 4);
+$docs = Doc\Doc::Where("project_id", $project['id']);
 ?>
 
 <?php
@@ -71,7 +75,8 @@ if (!$chat) {
 <style>
 
 </style>
-<main style="padding-top: 20px ">
+<br>
+<main style="padding-top: 0px ">
     <section>
         <div class="page container-fluid">
             <div class="row">
@@ -106,41 +111,33 @@ if (!$chat) {
                     <div class="row m-0 my-4">
                         <div class="col-12 tab-content no-bg py-2 no-border">
                             <div class="mt-4 d-flex justify-content-between">
-                                <h5 class="_primary_color">Files</h5>
+                                <h5 class="_primary_color">Documents</h5>
                                 <div>
-                                    <a href="" class="badge _secondary_bg text-decoration-none">View All</a>
+                                    <a href="/portal/files?project=<?php echo $project['project_id']; ?>" class="badge _primary_bg text-decoration-none">View All</a>
+                                    <a href="/portal/editor?project=<?php echo $project['project_id']; ?>" class=" badge _secondary_bg text-decoration-none">New</a>
+
                                 </div>
                             </div>
+
                             <div class="tab-pane active documents documents-panel">
-                                <div class="document">
-                                    <div class="document-body">
-                                        <i class="fa fa-file-excel-o text-success"></i>
-                                    </div>
-                                    <div class="document-footer">
-                                        <span class="document-name"> Excel database 2016 </span>
-                                        <span class="document-description"> 1.1 MB </span>
-                                    </div>
-                                </div>
+                                <?php
+                                if (count($docs) > 0) :
+                                    foreach ($docs as $doc) : ?>
+                                        <div class="document">
+                                            <div class="document-body">
+                                                <i class="fa fa-file-word-o text-primary"></i>
+                                            </div>
+                                            <div class="document-footer">
+                                                <span class="document-name"> Excel database 2016 </span>
+                                                <span class="document-name" style="font-size: smaller;"> Created by: sdahkla </span>
+                                                <span class="document-description"> 1.1 MB </span>
+                                            </div>
+                                        </div>
+                                    <?php endforeach;
+                                else : ?>
+                                    No Document found
+                                <?php endif; ?>
 
-                                <div class="document">
-                                    <div class="document-body">
-                                        <i class="fa fa-file-word-o text-info"></i>
-                                    </div>
-                                    <div class="document-footer">
-                                        <span class="document-name"> Excel database 2016 </span>
-                                        <span class="document-description"> 1.1 MB </span>
-                                    </div>
-                                </div>
-
-                                <div class="document">
-                                    <div class="document-body">
-                                        <i class="fa fa-file-pdf-o text-danger"></i>
-                                    </div>
-                                    <div class="document-footer">
-                                        <span class="document-name"> Excel database 2016 </span>
-                                        <span class="document-description"> 1.1 MB </span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -150,46 +147,69 @@ if (!$chat) {
                             <div class="mt-4 d-flex justify-content-between">
                                 <h5 class="_primary_color">Chat</h5>
                                 <div>
-                                    <a href="" class="badge bg-dark text-decoration-none">View</a>
+                                    <a href="/portal/chat?hash=<?php echo $chat["chat_hash"]; ?>" class="badge bg-dark text-decoration-none">View</a>
                                 </div>
                             </div>
                             <div class="page_section row m-0 my-4 row-cols-1">
-                                <div class="card Box py-2 p-3 my-2">
-                                    <a href="" class="text-decoration-none  ">
-                                        <div class="pinned-item-list-item-content">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp" class="rounded-circle" alt="Avatar" width="60px" height="60px" /> <span class="mx-1"></span>
-                                                    <div>
-                                                        <strong class="text-black-50">New message from - Jurge</strong>
-                                                        <p class="text-bold text-dark p-0 m-0"><span class="project_name" title="pm-twitter">Lorem ipsum dolor sit amet consectetur adipisicing elit.</span></p>
+                                <?php
+                                if (count($recentMessages) > 0) :
+                                    foreach ($recentMessages as $msg) {
+                                        $user = User\User::Where("id", "=", $msg["user_id"]);
+                                        $thisImage = "../assets/img/users/" . $user["profile_image"];
+                                ?>
+                                        <div class="card Box py-2 p-3 my-2">
+                                            <a href="/portal/chat?hash=<?php echo $chat["chat_hash"]; ?>" class="text-decoration-none  ">
+                                                <div class="pinned-item-list-item-content">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="d-flex align-items-center">
+                                                            <img src="<?php echo if__else($user['profile_image'], '', $avatar, $thisImage); ?>" class="rounded-circle" alt="Avatar" width="60px" height="60px" /> <span class="mx-1"></span>
+                                                            <div>
+                                                                <strong class="text-black-50">New message from - <?php echo $user['full_name']; ?></strong>
+                                                                <p class="text-bold text-dark p-0 m-0"><span class="project_name" title="pm-twitter"><?php echo if__else($msg['is_file'], true, 'Shared new ' . $msg['file_type'], $msg['message']); ?>.</span></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="is_desktop">
+                                                            <span class="badge _primary_bg">View</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="is_desktop">
-                                                    <span class="badge _primary_bg">New</span>
+                                            </a>
+                                        </div>
+                                    <?php }
+                                else : ?>
+                                    No message found
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-0 my-4">
+                        <div class="col-12 tab-content no-bg py-2 no-border">
+                            <div class="mt-4 d-flex justify-content-between">
+                                <h5 class="_primary_color">Chat Media</h5>
+                                <a href="/portal/media?chat=<?php echo $chat["chat_hash"]; ?>" class="badge bg-dark text-decoration-none">View All</a>
+                            </div>
+                            <div class="tab-pane active documents documents-panel">
+                                <?php
+                                if (count($recentMedia) > 0) :
+                                    foreach ($recentMedia as $file) { ?>
+                                        <a href="<?php echo $file['file']; ?>" target="_blank">
+                                            <div class="document">
+                                                <div class="document-body">
+                                                    <i class="fa <?php echo $file['file_icon'] . ' ' . $file['file_bg']; ?>" style=" font-size: 20px;"></i>
+                                                </div>
+                                                <div class="document-footer">
+                                                    <span class="document-name <?php echo $modeTheme; ?> mb-2"> <?php echo $file['file_name']; ?> </span>
+                                                    <span class="document-description "> <?php echo $file['file_size']; ?> MB</span>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="card Box bg-opacity-25 py-2 p-3 my-2">
-                                    <a href="" class="text-decoration-none">
-                                        <div class="pinned-item-list-item-content">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="d-flex align-items-center">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/8.webp" class="rounded-circle" alt="Avatar" width="60px" height="60px" /> <span class="mx-1"></span>
-                                                    <div>
-                                                        <strong class="text-black-50">New message from - Jurge</strong>
-                                                        <p class="text-bold text-dark p-0 m-0"><span class="project_name" title="pm-twitter">Lorem ipsum dolor sit amet consectetur adipisicing elit.</span></p>
-                                                    </div>
-                                                </div>
-                                                <div class="is_desktop is_tablet">
-                                                    <span class="badge _secondary_bg">View</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
+                                        </a>
+                                    <?php }
+                                else : ?>
+                                    No media found
+                                <?php endif; ?>
+
+
+
                             </div>
                         </div>
                     </div>
@@ -204,5 +224,8 @@ if (!$chat) {
 </main>
 
 <?php
+
+use User\User;
+
 require("../shared/_footer.php");
 ?>

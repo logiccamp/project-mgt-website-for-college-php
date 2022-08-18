@@ -52,7 +52,7 @@ class Auth
         }
     }
 
-    public static function Register(array $user)
+    public static function Register(array $user, $role = "student")
     {
         self::Connect();
         try {
@@ -61,18 +61,28 @@ class Auth
             $password = $user["password"];
             $password_confirmation = $user["password_confirmation"];
             $isUser = User::Where('matric_no', "=", $matricNo);
-
-            if (substr_count($user["matric_no"], "/") !== 3) {
-                return [
-                    "status" => false,
-                    "message" => "Invalid matric no",
-                ];
-            }
-            if (strlen($matricNo) < 15) {
-                return [
-                    "status" => [false],
-                    "message" => "Invalid matric no",
-                ];
+            if ($role == "student") {
+                $email = $user["email"];
+                if (substr_count($user["matric_no"], "/") !== 3) {
+                    return [
+                        "status" => false,
+                        "message" => "Invalid matric no",
+                    ];
+                }
+                if (strlen($matricNo) < 15) {
+                    return [
+                        "status" => [false],
+                        "message" => "Invalid matric no",
+                    ];
+                }
+                if ($email == "") {
+                    return [
+                        "status" => [false],
+                        "message" => "Invalid email address",
+                    ];
+                }
+            } else {
+                $email = $matricNo;
             }
             if ($password !== $password_confirmation) {
                 return [
@@ -89,7 +99,11 @@ class Auth
             }
 
             $hashed = password_hash($password, PASSWORD_DEFAULT);
-            $query = "INSERT into `users` (`id`, `matric_no`, `full_name`, `password`, `date_registered`) VALUES(NULL, '$matricNo', '$full_name', '$hashed', CURRENT_TIMESTAMP)";
+            if ($role == "student") {
+                $query = "INSERT into `users` (`id`, `matric_no`, `full_name`, `password`, `email`, `date_registered`) VALUES(NULL, '$matricNo', '$full_name', '$hashed','$email', CURRENT_TIMESTAMP)";
+            } else {
+                $query = "INSERT into `users` (`id`, `matric_no`, `full_name`, `password`, `email`, `role_name`, `date_registered`) VALUES(NULL, '$matricNo', '$full_name', '$hashed', '$email', '$role', CURRENT_TIMESTAMP)";
+            }
             $rs = mysqli_query(self::$con, $query);
             if ($rs) {
                 return [

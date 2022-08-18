@@ -7,7 +7,7 @@ $userImage = '/assets/img/users/' . $user["profile_image"];
 ?>
 
 <div class="col-lg-4">
-    <div class="p-2 py-5 text-center">
+    <div class="p-2 mt-4 py-5 text-center shadow bg-white">
         <div class="user_avatar">
             <img src="<?php echo if__else($user["profile_image"], "", $avatar, $userImage); ?>" class=" rounded-circle mb-3" style="width: 200px; height: 200px; object-fit: fill" alt="Avatar" />
             <h5 class="mb-2 <?php echo $modeTheme; ?>"><strong><?php echo $user["full_name"]; ?></strong></h5>

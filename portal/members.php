@@ -8,10 +8,10 @@ $matric_no = $_SESSION["user_id"];
 $activeUser = User\User::Where("matric_no", "=", $matric_no);
 $member = ProjectMember\ProjectMember::Where("user_id", "=", $activeUser['id']);
 
-if ($member == null) {
+if ($member == null && $activeUser["role_name"] == "student") {
     header("Location: /join");
 }
-if ($activeUser["profile_completed"] == false) {
+if ($activeUser["profile_completed"] == false && $activeUser["role_name"] == "student") {
     header("Location: /portal/profile");
 }
 

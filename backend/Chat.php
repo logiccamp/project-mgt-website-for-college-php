@@ -47,6 +47,7 @@ class Chat
             $query = "INSERT into `chats` (`chat_hash`, `project_id`, `has_project`, `date_created`) values('$hash', '$project_id', '$has_project', CURRENT_TIMESTAMP)";
             $rs = mysqli_query(self::$con, $query);
             if ($rs) {
+                $chat["id"] = mysqli_insert_id(self::$con);
                 return [
                     "status" => true,
                     "chat" => $chat,
@@ -66,6 +67,27 @@ class Chat
     {
         return ChatMessage::Where("chat_id", "=", $id);
     }
+
+    public static function MessagesWithLimit($id, $user, $limit)
+    {
+        return ChatMessage::MessagesWithLimit("chat_id", $id, $user, $limit);
+    }
+
+    public static function Files($id)
+    {
+        $messages = ChatMessage::Where("chat_id", "=", $id);
+        foreach ($messages as $file) {
+            if ($file["is_file"] == true) $files[] = $file;
+        }
+        return $files;
+    }
+
+    public static function FilesWithLimit($id, $limit)
+    {
+        $messages = ChatMessage::GetLimit("chat_id", $id, $limit);
+        return $messages;
+    }
+
     private static function GenerateHash()
     {
         $chars = "abcdefg4hijklmno-p5qrst2uvwxyzabc6defghijklm-nopqrst6uvwxy1zabc6defghij-klmnop6qrstuvwxyz7";

@@ -5,6 +5,9 @@ $("#toggleTheme").click(function(){
 
 
 try {
+    $(".navbar-toggler").on("click", function(){
+        $("#navbarColor01").toggle(500)
+    })
     $("#showDropZonePicture").on("click", function(){
         $("#uploadProfileImageOverlay").show(200);
     })

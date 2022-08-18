@@ -21,14 +21,14 @@ require(__DIR__ . "/shared/functions.php");
                             <i class="fa fa-lock"></i>
                             Student
                         </a>
-                        <a href="/login" class="btn border-0 btn-success _secondary_bg">
+                        <a href="/admin" class="btn border-0 btn-success _secondary_bg">
                             <i class="fa fa-user"></i>
                             Admin
                         </a>
                     </div>
 
                     <div class="mt-5">
-                        <p>Developed by: ND 3 Computer Science (Group 8) 2021/2022</p>
+                        <p>Developed by: ND 3 Computer Science 2021/2022</p>
                     </div>
                 </div>
             </div>

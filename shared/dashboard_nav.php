@@ -1,10 +1,18 @@
 <!-- navbar -->
 
 <?php
-$avatar = "https://mdbcdn.b-cdn.net/img/new/avatars/8.webp";
+$avatar = "/assets/img/user_avatar_2.png";
 $userImage = '/assets/img/users/' . $user["profile_image"];
+
+$bg = '_primary-bg';
+if ($user["role_name"] == "student") {
+} else {
+    $bg = '_secondary_bg';
+}
+
+
 ?>
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top <?php echo $mode == "dark" ? 'bg-dark' : '_primary_bg'; ?>">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top <?php echo $mode == "dark" ? 'bg-dark' : $bg; ?>">
     <div class="container-fluid ">
         <a class="navbar-brand fw-bold" href="/portal/dashboard">SuperVISE</a>
 

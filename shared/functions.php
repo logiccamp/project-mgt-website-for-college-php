@@ -5,10 +5,14 @@ include(__DIR__ . '/../backend/Project.php');
 include(__DIR__ . '/../backend/Profile.php');
 include(__DIR__ . '/../backend/Schools.php');
 include(__DIR__ . '/../backend/Chat.php');
+include(__DIR__ . '/../backend/ChatMessages.php');
+include(__DIR__ . '/../backend/Doc.php');
+
 
 use Project\Project;
 use ProjectMember\ProjectMember;
 use Chat\Chat;
+use Doc\Doc;
 
 
 

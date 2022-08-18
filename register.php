@@ -52,6 +52,12 @@ endif;
                         </div>
 
                         <div class="form-group my-3">
+                            <label class="form-label">Email</label>
+                            <input type="text" class="form-control w-100" name="email">
+                        </div>
+
+
+                        <div class="form-group my-3">
                             <label class="form-label">Password</label>
                             <input type="password" class="form-control w-100" name="password">
                         </div>
@@ -79,7 +85,8 @@ endif;
                     </form>
 
                     <div class="mt-5">
-                        <p>Developed by: ND 3 Computer Science (Group 8) 2021/2022</p>
+                        <p>Developed by: ND 3 Computer Science 2021/2022</p>
+
                     </div>
                 </div>
             </div>

@@ -4,6 +4,7 @@ namespace User;
 
 use Project\Project;
 use ProjectMember\ProjectMember;
+use ChatMessage\ChatMessage;
 
 class User
 {
@@ -61,21 +62,27 @@ class User
         }
     }
 
-    public static function Projects(string $id)
+    public static function Projects(string $id, $role = "student")
     {
         try {
             self::Connect();
             $projects = [];
+            if ($role == "student") :
+                $p_members = ProjectMember::Where("user_id", "=", $id);
+                if (empty($p_members)) return $projects;
 
-            $p_members = ProjectMember::Where("user_id", "=", $id);
-            if (empty($p_members)) return $projects;
-
-            foreach ($p_members as $memberOf) {
-                $of_project = Project::Where("id", "=", $memberOf["project_id"]);
+                foreach ($p_members as $memberOf) {
+                    $of_project = Project::Where("id", "=", $memberOf["project_id"]);
+                    foreach ($of_project as $p) {
+                        $projects[] = $p;
+                    }
+                }
+            else :
+                $of_project = Project::Where("supervisor", "=", $id);
                 foreach ($of_project as $p) {
                     $projects[] = $p;
                 }
-            }
+            endif;
             return $projects;
         } catch (\Throwable $th) {
             return loadError($th, true, "/register", "Go back");
@@ -148,6 +155,18 @@ class User
             } else {
                 return "";
             }
+        } catch (\Throwable $th) {
+            return loadError($th, true, "/register", "Go back");
+        }
+    }
+
+    public static function Chats(string $id, $role = "student")
+    {
+        try {
+            self::Connect();
+            $projects = [];
+            $chats = ChatMessage::WhereDistinct($id);
+            return $chats;
         } catch (\Throwable $th) {
             return loadError($th, true, "/register", "Go back");
         }

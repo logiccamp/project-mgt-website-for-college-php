@@ -28,12 +28,13 @@ endif;
 
     <!-- register styles -->
     <?php
-    if ($pagetype == "dashboard") : ?>
+    if ($pagetype == "dashboard" || $pagetype == "editor") : ?>
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="/assets/css/dashboard.css" />
         <link rel="stylesheet" href="/assets/css/panel.css" />
         <link rel="stylesheet" href="/assets/css/chat.css" />
         <link rel="stylesheet" href="/vendors/perfect-scrollbar/css/mdb.min.css" />
+        <link rel="stylesheet" href="/assets/css/editor.css">
     <?php else : ?>
         <link rel="stylesheet" href="/vendors/fontawesome/all.min.css" />
         <link rel="stylesheet" href="/assets/css/home.css" />
@@ -47,6 +48,9 @@ endif;
     if ($pagetype == "dashboard") :
         $activeUser = User\User::Where("matric_no", "=", $_SESSION['user_id']);
         loadDashboardNav($mode, $activeUser);
+    elseif ($pagetype == "editor") :
+        loadEditorNav($mode, $activeUser, $doc);
+
     else :
         loadNavigation();
     endif;

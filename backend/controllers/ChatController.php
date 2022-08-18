@@ -21,7 +21,6 @@ if (isset($_REQUEST['action'])) :
             $chat_id = $chat["id"];
             $project_id = $_POST['project_id'];
             $user_id = $_POST['user_id'];
-
             if ($user_id == "") return print("error");
 
             // check if its valid user;
@@ -33,7 +32,7 @@ if (isset($_REQUEST['action'])) :
                 $message = $_POST['message'];
 
                 if ($message == "") return print("message cannot be empty");
-
+                echo $chat_id;
                 $new_message = ChatMessage\ChatMessage::Create([
                     "is_file" => false,
                     "chat_id" => $chat_id,
@@ -62,6 +61,8 @@ if (isset($_REQUEST['action'])) :
                     "file_size" => $_POST["file_size"],
                     "file_ext" => $_POST["file_ext"],
                     "file_bg" => $_POST["file_bg"],
+                    "file_name" => $_POST["file_name"],
+                    "file_icon" => $_POST["file_icon"],
                     "file" => $file_loc
                 ]);
             endif;

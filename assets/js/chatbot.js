@@ -25,29 +25,42 @@ function loadChat(scroll){
                 $userImage= avatar;
             }
             if(message.user_id == user_id){
-                
-                isUser = `<img src="${$userImage}" alt="avatar" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" height="60" width="60">`
+                message.is_file == true ? li.classList.add("justify-content-end") : li.classList.add("justify-content-between")
+                isUser = `<img src="${$userImage}" alt="avatar" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" height="60" width="60"> <span class="p-2"></span>`
             }else{
-                notUser = `<img src="${$userImage}" alt="avatar" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" height="60" width="60">`
+                message.is_file == true ? li.classList.add("justify-content-start") : li.classList.add("justify-content-between")
+                notUser = `<img src="${$userImage}" alt="avatar" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" height="60" width="60"><span class="p-2"></span>`
             }
             li.classList.add("d-flex")
-            li.classList.add("justify-content-between")
             li.classList.add("mb-4")
-            li.innerHTML =`
-                        ${notUser}
-                        <div class="card w-100">
-                            <div class="card-header d-flex justify-content-between p-3">
-                                <p class="fw-bold mb-0">${message.user.full_name}</p>
-                                <p class="text-muted small mb-0"><i class="far fa-clock"></i> ${$date_}</p>
+            if(message.is_file == true){
+                li.innerHTML = `${notUser}
+                                <div class="document">
+                                    <div class="document-body">
+                                        <i class="fa ${message.file_icon} ${message.file_bg}"></i>
+                                    </div>
+                                    <div class="document-footer">
+                                        <span class="document-name"> ${message.file_name} </span>
+                                        <span class="document-description">${message.file_size} MB </span>
+                                    </div>
+                                    </div>
+                                ${isUser}`
+            }else {
+                li.innerHTML =`
+                            ${notUser}
+                            <div class="card w-100">
+                                <div class="card-header d-flex justify-content-between p-3">
+                                    <p class="fw-bold mb-0">${message.user.full_name}</p>
+                                    <p class="text-muted small mb-0"><i class="far fa-clock"></i> ${$date_}</p>
+                                </div>
+                                <div class="card-body">
+                                    <p class="mb-0">
+                                        ${message.message}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <p class="mb-0">
-                                    ${message.message}
-                                </p>
-                            </div>
-                        </div>
-                        ${isUser}
-                        `
+                            ${isUser}`
+            }
             $(".msg_container_base").append(li)
         });
 
@@ -71,7 +84,6 @@ $("#sendButton").on("click", function(){
 })
 
 $("#sendFile").on("click", function(){
-    alert("Hello")
     if(uploadedFiles.length > 0){
         uploadedFiles.forEach(file => {
             $(".fileError").hide()
@@ -83,13 +95,15 @@ $("#sendFile").on("click", function(){
 })
 
 function sendChat(data,type){
+    console.log(data)
+    console.log(type)
     $.ajax({
         url : "/backend/controllers/ChatController.php?action=Create&type="+type,
         method : "POST",
         cache : false,
         data : data,
-        contentType: false,
-        processData: false,
+        // contentType: 'application/JSON',
+        // processData: false,
         success : function(d){
             $("#messageInputBox").text('')
             loadChat(true)
@@ -113,7 +127,8 @@ function getFileToSend(file){
     var file_size = parseFloat(orginal_size/kb).toFixed(2)
     var file_type = getType(file_ext)
     var file_bg = getBg(file_ext)
-
+    var file_icon = getIcon(file_ext)
+    
     var formdata = new FormData();
     formdata.append("chat_id", chat_id)
     formdata.append("user_id", user_id)
@@ -123,7 +138,8 @@ function getFileToSend(file){
     formdata.append("file_size", file_size)
     formdata.append("file_type", file_type)
     formdata.append("file_bg", file_bg)
-    
+    formdata.append("file_icon", file_icon)
+    formdata.append("file_name", file_name.replace(file_ext, ""))
     return formdata;
 }
 
@@ -195,6 +211,9 @@ function getType(ext){
 
 function getBg(ext){
     switch (ext) {
+        case '.html':
+            return "text-danger"
+            break;
         case '.doc':
             return "text-primary"
             break;
@@ -245,5 +264,63 @@ function getBg(ext){
             break;
         default :
             return 'text-success'
+    }
+}
+
+function getIcon(ext){
+    switch (ext) {
+        case '.html':
+            return "fa-html5"
+            break;
+        case '.doc':
+            return "fa-file-word-o"
+            break;
+        case '.docx':
+            return "fa-file-word-o"
+            break;
+        case '.rtf':
+            return "fa-file-word-o"
+            break;
+        case '.accdb':
+            return "fa-database"
+            break;
+        case '.jpg':
+            return "fa-picture-o"
+            break;
+        case '.png':
+            return "fa-picture-o"
+            break;
+        case '.jpeg':
+            return "fa-picture-o"
+            break;
+        case '.pdf':
+            return "fa-file-pdf-o"
+            break;
+        case '.ppt':
+            return "text-danger"
+            break;
+        case '.pptx':
+            return "text-danger"
+            break;
+        case '.xls':
+            return "fa-file-excel-o"
+            break;
+        case '.xlsx':
+            return "fa-file-excel-o"
+            break;
+        case '.mp4':
+            return "fa-video-camera"
+            break;
+        case '.mp3':
+            return "fa-file-audio-o"
+            break;
+        case '.wav':
+            return "fa-file-audio-o"
+            break;
+        case '.gif':
+            return "fa-picture-o"
+            break;
+        default :
+            return 'fa-file'
     }
 }
