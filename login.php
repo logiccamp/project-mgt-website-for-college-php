@@ -50,6 +50,11 @@ if (isset($_POST["login_btn"])) {
                             <label class="form-label">Password</label>
                             <input type="password" class="form-control w-100" name="password">
                         </div>
+                        <div>
+                            <a href="/forgot-password" class="btn py-0 my-0 btn-link">
+                                Forgot password ?
+                            </a>
+                        </div>
                         <div class="buttons my-4">
                             <button name="login_btn" class="btn btn-success _primary_bg">
                                 <i class="fa fa-lock"></i>

@@ -24,7 +24,7 @@ require("../shared/_header.php");
 <style>
 
 </style>
-<main style="padding-top: 20px ">
+<main style="padding-top: 00px ">
     <section>
         <div class="page container-fluid">
             <div class="row page_row">

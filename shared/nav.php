@@ -15,10 +15,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-
                     <a class="nav-link" href="/login">
                         <i class="fa fa-lock"></i>
                         Student Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn _secondary_bg" href="/admin">
+                        <i class="fa fa-user"></i>
+                        Admin
                     </a>
                 </li>
             </ul>

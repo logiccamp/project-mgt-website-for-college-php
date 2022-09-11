@@ -4,7 +4,7 @@
 $avatar = "/assets/img/user_avatar_2.png";
 $userImage = '/assets/img/users/' . $user["profile_image"];
 
-$bg = '_primary-bg';
+$bg = '_primary_bg';
 if ($user["role_name"] == "student") {
 } else {
     $bg = '_secondary_bg';

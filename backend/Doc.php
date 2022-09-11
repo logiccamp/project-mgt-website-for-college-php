@@ -55,22 +55,28 @@ class Doc
         }
     }
 
-    public static function Add(array $project)
+    public static function Add(array $doc)
     {
         try {
             self::Connect();
-            $project_title = mysqli_real_escape_string(self::$con, $project["title"]);
-            $description = mysqli_real_escape_string(self::$con, $project["description"]);
-            $supervisor = mysqli_real_escape_string(self::$con, $project["supervisor"]);
-            $chapters = mysqli_real_escape_string(self::$con, $project["chapters"]);
+            $project = mysqli_real_escape_string(self::$con, $doc["project_id"]);
+            $user = mysqli_real_escape_string(self::$con, $doc["user_id"]);
+            $content = $doc["content"];
+            $file_name = mysqli_real_escape_string(self::$con, $doc["file_name"]);
+
             $chars = "123456789";
-            $project_id = substr(str_shuffle($chars), 0, 10);
-            $query = "Insert into `projects` (`project_title`, `project_id`, `description`, `supervisor`, `date_added`, `chapters`) values('$project_title', '$project_id', '$description', '$supervisor', CURRENT_TIMESTAMP, '$chapters')";
+            $doc_id = substr(str_shuffle($chars), 0, 10);
+            $docLocation = "../assets/docs/" . $doc_id . ".super";
+            $file_location = $doc_id . ".super";
+            $docFile = fopen($docLocation, "w");
+            fwrite($docFile, $content);
+            fclose($docFile);
+            $query = "INSERT INTO `docs` (`doc_id`, `project_id`, `user_id`, `file_location`, `file_name`, `date_created`) VALUES ('$doc_id', '$project', '$user', '$file_location', '$file_name', CURRENT_TIMESTAMP)";
             $rs = mysqli_query(self::$con, $query);
             if ($rs) {
                 return [
                     "status" => true,
-                    "project" => mysqli_insert_id(self::$con),
+                    "doc" => $doc_id,
                 ];
             } else {
                 return [
@@ -81,5 +87,43 @@ class Doc
         } catch (\Throwable $th) {
             //throw $th;
         }
+    }
+
+    public static function Update(array $doc, $doc_id)
+    {
+        try {
+            self::Connect();
+            $content = $doc["content"];
+            $file_name = mysqli_real_escape_string(self::$con, $doc["file_name"]);
+
+            $docLocation = "../assets/docs/" . $doc_id . ".super";
+            $docFile = fopen($docLocation, "w");
+            fwrite($docFile, $content);
+            fclose($docFile);
+
+
+            $query = "UPDATE `docs` SET `file_name` = '$file_name' WHERE `doc_id` = '$doc_id'";
+            $rs = mysqli_query(self::$con, $query);
+            if ($rs) {
+                return [
+                    "status" => true,
+                    "doc" => $doc_id,
+                ];
+            } else {
+                return [
+                    "status" => false,
+                    "error" => mysqli_error(self::$con),
+                ];
+            }
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+    }
+    public static function DeleteDoc($doc)
+    {
+        $query = "DELETE FROM `docs` WHERE `doc_id` = '$doc'";
+
+        mysqli_query(self::$con, $query);
+        return true;
     }
 }

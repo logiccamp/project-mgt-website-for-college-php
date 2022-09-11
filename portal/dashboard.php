@@ -1,6 +1,5 @@
 <?php
 
-
 require(__DIR__ . "/../shared/functions.php");
 session_start();
 if (!isset($_SESSION["user_id"]) || $_SESSION["user_id"] == null) {
@@ -35,12 +34,13 @@ $avatar = "/assets/img/user_avatar_2.png";
 
 $chats = User\User::Chats($activeUser["id"]);
 $recentMessages = [];
-if (count($chats[0]) > 0) {
-    foreach ($chats[0] as $chat_) {
-        $recentMessages = Chat\Chat::MessagesWithLimit($chat_, $activeUser["id"], 5);
+if ($chats) {
+    if (count($chats[0]) > 0) {
+        foreach ($chats[0] as $chat_) {
+            $recentMessages = Chat\Chat::MessagesWithLimit($chat_, $activeUser["id"], 5);
+        }
     }
 }
-
 ?>
 
 <style>

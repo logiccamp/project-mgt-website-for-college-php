@@ -61,13 +61,10 @@ if (!$chat) {
 
 $recentMessages = Chat\Chat::MessagesWithLimit($chat["id"], $activeUser["id"], 5);
 $recentMedia = Chat\Chat::FilesWithLimit($chat['id'], 4);
-$docs = Doc\Doc::Where("project_id", $project['id']);
+$docs = Doc\Doc::Where("project_id", $project['project_id']);
 ?>
 
 <?php
-
-
-
 
 
 ?>
@@ -109,7 +106,7 @@ $docs = Doc\Doc::Where("project_id", $project['id']);
                         </div>
                     </div>
                     <div class="row m-0 my-4">
-                        <div class="col-12 tab-content no-bg py-2 no-border">
+                        <div class="col-12 tab-content no-bg py-2 pb-5 no-border">
                             <div class="mt-4 d-flex justify-content-between">
                                 <h5 class="_primary_color">Documents</h5>
                                 <div>
@@ -119,27 +116,36 @@ $docs = Doc\Doc::Where("project_id", $project['id']);
                                 </div>
                             </div>
 
-                            <div class="tab-pane active documents documents-panel">
+                            <div class="tab-pane active documents documents-panel ">
                                 <?php
                                 if (count($docs) > 0) :
-                                    foreach ($docs as $doc) : ?>
-                                        <div class="document">
-                                            <div class="document-body">
-                                                <i class="fa fa-file-word-o text-primary"></i>
+                                    foreach ($docs as $doc) :
+                                        $usr = "";
+                                        $uploaded_by = User\User::Where("id", "=", $doc['user_id']);
+                                        if ($uploaded_by) {
+                                            $usr = $uploaded_by["full_name"];
+                                        }
+                                        $owner = $doc['user_id'] == $activeUser["id"] ? true : false;
+                                ?>
+                                        <a class="my-3 " href="<?php echo '/portal/editor?project=' . $project["project_id"] . '&doc=' . $doc["doc_id"]; ?>">
+                                            <div class="document position-relative">
+                                                <div class="document-body">
+                                                    <i class="fa fa-file-word-o text-primary"></i>
+                                                </div>
+                                                <div class="document-footer">
+                                                    <span class="document-name text-dark"> <?php echo $doc["file_name"]; ?> </span>
+                                                    <span class="document-name text-black-50" style="font-size: smaller;"> Created by: <?php echo $usr; ?></span>
+                                                </div>
+                                                <a class="position-absolute fw-bold  px-2 rounded-pill bg-danger text-white deleteFile" style="top: 5px; right: 5px; font-size: 20px;" href="#?" data-doc="<?php echo $doc["doc_id"]; ?>">&times;</a>
                                             </div>
-                                            <div class="document-footer">
-                                                <span class="document-name"> Excel database 2016 </span>
-                                                <span class="document-name" style="font-size: smaller;"> Created by: sdahkla </span>
-                                                <span class="document-description"> 1.1 MB </span>
-                                            </div>
-                                        </div>
+                                        </a>
                                     <?php endforeach;
                                 else : ?>
                                     No Document found
                                 <?php endif; ?>
-
                             </div>
                         </div>
+                        <br>
                     </div>
 
                     <div class="row m-0 section_wrapper my-4 py-2">
@@ -222,6 +228,9 @@ $docs = Doc\Doc::Where("project_id", $project['id']);
         </div>
     </section>
 </main>
+<script>
+
+</script>
 
 <?php
 

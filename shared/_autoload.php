@@ -12,7 +12,7 @@ function loadDashboardNav($mode, $user)
     require(__DIR__ . "/dashboard_nav.php");
 }
 
-function loadEditorNav($mode, $user, $doc)
+function loadEditorNav($mode, $user, $doc, $project)
 {
     require(__DIR__ . "/editor_nav.php");
 }

@@ -171,4 +171,56 @@ class User
             return loadError($th, true, "/register", "Go back");
         }
     }
+    public static function saveToken($email, $token)
+    {
+        $expired = time() + 100;
+        $query = "INSERT into `password_resets` (`id`, `email`, `token`, `expired_at`) VALUES(NULL, '$email', '$token', '$expired')";
+        $rs = mysqli_query(self::$con, $query);
+        if ($rs) {
+            return true;
+        } else {
+            return null;
+        }
+    }
+
+    public static function voidTokens($email)
+    {
+        $value = 1;
+        $query = "UPDATE `password_resets` SET `status` = '1' WHERE `email` = '$email'";
+        mysqli_query(self::$con, $query);
+    }
+
+    public static function updatePassword($id, $password)
+    {
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        try {
+            self::Connect();
+            $query = "UPDATE `users` SET `password` = '$hash' WHERE `id` = '$id'";
+            $rs = mysqli_query(self::$con, $query);
+            if ($rs) {
+                return true;
+            } else {
+                return null;
+            }
+        } catch (\Throwable $th) {
+            return loadError($th, true, "/register", "Go back");
+        }
+    }
+
+    public static function getToken($token)
+    {
+        try {
+            self::Connect();
+            $query = "Select * from `password_resets` where `token` = '$token'";
+            $rs = mysqli_query(self::$con, $query);
+            $count = mysqli_num_rows($rs) > 0;
+            if ($count) {
+                return mysqli_fetch_assoc($rs);
+            } else {
+                return null;
+            }
+        } catch (\Throwable $th) {
+            return loadError($th, true, "/register", "Go back");
+        }
+    }
 }

@@ -33,3 +33,10 @@ try {
 } catch (error) {
     console.log(error)
 }
+
+
+$(".deleteFile").on("click", function(event) {
+    var doc = $(this).attr("data-doc")
+    if(!confirm("Are you sure to delete? This action cannot be reversed!")) return false;
+    window.location.assign(`/portal/delete-doc?doc=${doc}`)
+})

@@ -26,15 +26,23 @@ if (!isset($_GET["project"]) || $_GET["project"] == "") {
     exit(loadError("Invalid Project", true, "/portal/dashboard", "Go Back"));
 }
 $doc = "";
+$ddoc = "";
+$content = "";
 if (isset($_GET["doc"]) && $_GET["doc"] !== "") {
     $doc_id = $_GET["doc"];
+    $ddoc = $_GET["doc"];
     $doc = Doc\Doc::Get("doc_id", $doc_id);
     if ($doc == null) {
         loadError("Invalid Document", true, "/portal/dashboard", "Go Back");
         exit();
     }
+
+    if ($doc["file_location"] != "") {
+        $file = fopen("../assets/docs/" . $doc["file_location"], 'r') or loadError("Unable to load document content", true, "/portal/dashboard", "Go Back");
+        $content = fread($file, filesize("../assets/docs/" . $doc["file_location"]));
+        fclose($file);
+    }
 }
-require("../shared/_header.php");
 
 $project = Project\Project::Where("project_id", "=", $_GET['project']);
 if (count($project) == 0) {
@@ -42,13 +50,18 @@ if (count($project) == 0) {
     exit();
 }
 $project = $project[0];
+
+require("../shared/_header.php");
+
 ?>
 <main>
-    <textarea name="content" class="content" id="content" cols="30" rows="10"></textarea>
+    <div id="success-alert" class="success_alert position-fixed shadow bg-success text-white p-2" style="top: 20px; right: 10px; z-index: 10000000003; display: none">File saved successfully</div>
+    <textarea name="content" class="content" id="content" cols="30" rows="10"><?php echo html_entity_decode($content); ?></textarea>
 </main>
 
 <script>
-    var file_id = ""
+    var file_id = "<?php echo $ddoc; ?>"
+    var project_id = "<?php echo $project["project_id"]; ?>"
 </script>
 <?php
 require("../shared/_footer.php");

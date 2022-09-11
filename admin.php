@@ -32,7 +32,7 @@ if (isset($_POST["login_btn"])) {
     <div class="page container auth">
         <div class="row">
             <div class="col-md-6 mx-auto ">
-                <div class="container banner_wrapper text-center flex-column justify-content-center align-items-start">
+                <div class="container text-center flex-column justify-content-center align-items-start">
                     <form action="/admin" class="form w-100 mx-auto" method="POST" style="max-width: 400px;">
                         <div class="w-100">
                             <h2 class="text-dark my-3 fs-1 fw-bold text-uppercase">SuperVISE</h2>
@@ -64,9 +64,8 @@ if (isset($_POST["login_btn"])) {
                         </div>
                     </form>
 
-                    <div class="mt-5">
-                    <p>Developed by: ND 3 Computer Science 2021/2022</p>
-
+                    <div class="mx-auto mt-5 ">
+                        <p>Developed by: ND 3 Computer Science 2021/2022</p>
                     </div>
                 </div>
             </div>

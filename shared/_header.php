@@ -49,7 +49,7 @@ endif;
         $activeUser = User\User::Where("matric_no", "=", $_SESSION['user_id']);
         loadDashboardNav($mode, $activeUser);
     elseif ($pagetype == "editor") :
-        loadEditorNav($mode, $activeUser, $doc);
+        loadEditorNav($mode, $activeUser, $doc, $project);
 
     else :
         loadNavigation();

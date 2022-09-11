@@ -42,7 +42,7 @@ if (isset($_POST['updateProfile'])) {
         if ($studentProfile["status"] == true) {
             $formError = "";
             $formSuccess = "New profile updated. redirecting...";
-            echo "<script> setTimeout(()=>{window.location.assign('/portal/dashboard')},1000) </script>";
+            echo "<script> setTimeout(()=>{window.location.assign('/portal/profile')},1000) </script>";
         } else {
             $formError = "Unable to update profile";
             $formSuccess = "";
@@ -69,7 +69,7 @@ if (isset($_POST['updateProfile'])) {
                     </button>
                 </div>
                 <div class="modal-body mx-3">
-                    <div class="md-form mb-3">
+                    <div class="md-form mb-3 <?php echo if__else($user["role_name"], 'student', '', 'd-none') ?>">
                         <label for="level">Level</label>
                         <select name="level" class="form-control form-select" id="level">
                             <option value="">Select</option>
@@ -83,7 +83,7 @@ if (isset($_POST['updateProfile'])) {
                         <div class="invalid-feedback" id="meta_title_error"></div>
                     </div>
 
-                    <div class="md-form mb-3">
+                    <div class="md-form mb-3 <?php echo if__else($user["role_name"], 'student', '', 'd-none') ?>">
                         <label for="program">Program</label>
                         <select name="program" class="form-control form-select" id="program">
                             <option value="">Select</option>
@@ -162,9 +162,9 @@ if (isset($_POST['updateProfile'])) {
 </div>
 
 <div class="p-2 my-4">
-    <div class="row m-0 flex_rotate">
+    <div class="row m-0 <?php echo if__else($user["role_name"], 'student', '', 'shadow py-3 bg-white rounded') ?> flex_rotate">
         <div class="col-md-8 ">
-            <div class="card py-3 px-2">
+            <div class="<?php echo if__else($user["role_name"], 'student', 'card', '') ?> py-3 px-2">
                 <?php if ($formError != "") echo "<div class='alert alert-danger w-100'>" . $formError . "</div>"; ?>
                 <?php if ($formSuccess != "") echo "<div class='alert alert-success w-100'>" . $formSuccess . "</div>"; ?>
                 <table class="table table-stripped">
@@ -180,15 +180,22 @@ if (isset($_POST['updateProfile'])) {
                                 <td><?php echo $user["matric_no"]; ?></td>
                             </tr>
                         <?php } ?>
-                        <tr>
-                            <td>Level</td>
-                            <td><?php echo $hasProfile ? $profile["level"] : ''; ?></td>
-                        </tr>
 
-                        <tr>
-                            <td>Program</td>
-                            <td><?php echo $hasProfile ? $profile["program"] : ''; ?></td>
-                        </tr>
+                        <?php
+                        if ($user["role_name"] == "student") { ?>
+                            <tr>
+                                <td>Level</td>
+                                <td><?php echo $hasProfile ? $profile["level"] : ''; ?></td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php
+                        if ($user["role_name"] == "student") { ?>
+                            <tr>
+                                <td>Program</td>
+                                <td><?php echo $hasProfile ? $profile["program"] : ''; ?></td>
+                            </tr>
+                        <?php } ?>
 
                         <tr>
                             <td>School</td>
@@ -212,8 +219,7 @@ if (isset($_POST['updateProfile'])) {
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card py-3 px-2 text-center align-items-center justify-content-center">
-
+            <div class="<?php echo if__else($user["role_name"], 'card', '', '') ?>  py-3 px-2 text-center align-items-center justify-content-center">
                 <img src="<?php echo $hasProfilePicture ? '/assets/img/users/' . $user["profile_image"] : '/assets/img/user_avatar_2.png' ?>" class="rounded-circle" alt="Avatar" width="200px" height="200px" /> <span class="mx-1"></span>
                 <div class="mt-3">
                     <a href="#?" id="showDropZonePicture" class="btn"> <span class="fa fa-edit"></span> &nbsp; Change</a>

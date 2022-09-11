@@ -15,7 +15,7 @@ require(__DIR__ . "/shared/functions.php");
                         <h2 class="text-dark fs-1 fw-bold ">SuperVISE</h2>
                         <h3 class="text-dark">Yaba College of Technology.</h3>
                     </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit facilis dolore consequuntur possimus ut rem quia natus corrupti a quibusdam, quod aut ea repudiandae at ab est sapiente? Eos, aliquid.</p>
+                    <p>Every final year project needs effective and collaborative supervision. Effective communication between student and supervisor is important!!!</p>
                     <div class="buttons my-4">
                         <a href="/login" class="btn btn-success _primary_bg">
                             <i class="fa fa-lock"></i>

@@ -31,7 +31,7 @@ endif;
         <div class="_min_space"></div>
         <div class="row">
             <div class="col-md-6 mx-auto">
-                <div class="container banner_wrapper flex-column justify-content-center align-items-center">
+                <div class="container flex-column justify-content-center align-items-center">
                     <form action="/register-supervisor" method="POST" class="form mx-auto text-center" style="width:95%; max-width: 400px">
                         <div class="w-100">
                             <h2 class="text-dark fs-1 fw-bold text-uppercase">SuperVISE</h2>
